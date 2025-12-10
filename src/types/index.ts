@@ -29,3 +29,13 @@ export interface IBuyerErrors {
     email?: string;
     phone?: string;
 }
+
+export type TProductListInfo = {
+    total: number;
+    items: IProduct[];
+}
+
+export type TOrderInfo = IBuyer & {
+    total: number;
+    items: string[];
+}

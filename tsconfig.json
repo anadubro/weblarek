@@ -5,7 +5,6 @@
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "outDir": "./dist",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -23,5 +22,5 @@
     "noUncheckedSideEffectImports": true,
 
   },
-  "include": ["src/types/*"]
+  "include": ["src"]
 }
