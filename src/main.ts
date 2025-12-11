@@ -45,7 +45,7 @@ testCart();
 function testBuyer() {
   const buyerFilledModel = new Buyer({
     payment: 'card',
-    address: 'Снайперская',
+    address: 'Snayperskaya 10',
     email: 'example@mail.ru',
     phone: '8999999999'
   });
@@ -65,9 +65,37 @@ testBuyer();
 
 async function testServer() {
   const communication = new Communication(new Api(API_URL));
-  const productList = await communication.getProductList();
-  const catalogModel = new Catalog();
-  catalogModel.setProducts(productList);
-  console.log('Массив товаров каталога, загруженный с сервера: ', catalogModel.getProducts());
+  try {
+      const productList = await communication.getProductList();
+      const catalogModel = new Catalog();
+      catalogModel.setProducts(productList);
+      console.log('Массив товаров каталога, загруженный с сервера: ', catalogModel.getProducts());
+    } catch (error) {
+      console.error('Ошибка при получении списка товаров:', error);
+    }
 }
 testServer();
+
+async function testOrder() {
+  const communication = new Communication(new Api(API_URL));
+
+  const cart = new Cart();
+  cart.addProduct(apiProducts.items[0]);
+  cart.addProduct(apiProducts.items[1]);
+
+  const buyer = new Buyer({
+    payment: 'card',
+    address: 'Snayperskaya 10',
+    email: 'example@mail.ru',
+    phone: '8999999999'
+  });
+
+  try {
+    const result = await communication.postOrderInfo(buyer.getData(), cart);
+    console.log('Заказ успешно отправлен:', result);
+  } catch (err) {
+    console.error('Ошибка при отправке заказа:', err);
+  }
+}
+
+testOrder();
