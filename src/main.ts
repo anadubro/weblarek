@@ -6,7 +6,10 @@ import { Buyer } from './components/models/Buyer.ts';
 import { Communication } from './components/Communication.ts';
 import { Api } from './components/base/Api.ts';
 import { API_URL } from "./utils/constants.ts";
+import { TOrderInfo } from "./types/index";
 
+ const communication = new Communication(new Api(API_URL));
+ 
 function testCatalog() {
   const catalogModel = new Catalog();
   catalogModel.setProducts(apiProducts.items);
@@ -64,7 +67,6 @@ function testBuyer() {
 testBuyer();
 
 async function testServer() {
-  const communication = new Communication(new Api(API_URL));
   try {
       const productList = await communication.getProductList();
       const catalogModel = new Catalog();
@@ -77,8 +79,6 @@ async function testServer() {
 testServer();
 
 async function testOrder() {
-  const communication = new Communication(new Api(API_URL));
-
   const cart = new Cart();
   cart.addProduct(apiProducts.items[0]);
   cart.addProduct(apiProducts.items[1]);
@@ -90,8 +90,14 @@ async function testOrder() {
     phone: '8999999999'
   });
 
+  const order: TOrderInfo = {
+    ...buyer.getData(),
+    total: cart.getTotalPrice(),
+    items: cart.getProducts().map(p => p.id)
+  };
+
   try {
-    const result = await communication.postOrderInfo(buyer.getData(), cart);
+    const result = await communication.postOrderInfo(order);
     console.log('Заказ успешно отправлен:', result);
   } catch (err) {
     console.error('Ошибка при отправке заказа:', err);
