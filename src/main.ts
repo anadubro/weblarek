@@ -7,6 +7,9 @@ import { Communication } from './components/Communication.ts';
 import { Api } from './components/base/Api.ts';
 import { API_URL } from "./utils/constants.ts";
 import { TOrderInfo } from "./types/index";
+import { cloneTemplate, ensureElement } from './utils/utils.ts';
+import { EventEmitter } from './components/base/Events.ts';
+import { ProductPromoView } from './components/views/productViews/ProductPromoView.ts';
 
  const communication = new Communication(new Api(API_URL));
  
@@ -43,7 +46,6 @@ function testCart() {
   console.log('Наличие товара в корзине по id: ', cartModel.hasProductById(apiProducts.items[1].id));
 }
 testCart();
-
 
 function testBuyer() {
   const buyerFilledModel = new Buyer({
@@ -105,3 +107,23 @@ async function testOrder() {
 }
 
 testOrder();
+
+// const eventEmitter = new EventEmitter();
+
+// let productPromoContainer = cloneTemplate<HTMLButtonElement>('#card-catalog');
+// let galleryElement = ensureElement('.gallery');
+
+// const productPromoView = new ProductPromoView(eventEmitter, productPromoContainer);
+// productPromoView.render({
+//   id: '123',
+//   title: 'Название',
+//   price: 12,
+//   category: 'дополнительное',
+//   image: "./images/trash.svg"
+// });
+
+// galleryElement.append(productPromoContainer);
+
+
+
+
