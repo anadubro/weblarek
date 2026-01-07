@@ -1,19 +1,19 @@
 import { ensureElement } from "../../../utils/utils";
-import { IProductBase, ProductBaseView } from "../productViews/ProductBaseView";
+import { IProductBase, ProductBaseView } from "./ProductBaseView";
 
-interface IBasketProductView extends IProductBase {
+interface ICartProductItemView extends IProductBase {
   index: number;
 }
 
-export interface IBasketProductActions {
+export interface ICartProductItemActions {
   onClickDelete: () => void;
 }
 
-export class BasketProductView extends ProductBaseView<IBasketProductView> {
+export class CartProductItemView extends ProductBaseView<ICartProductItemView> {
   protected buttonDelete: HTMLButtonElement;
   protected indexProduct: HTMLElement;
 
-  constructor(container: HTMLElement, actions?: IBasketProductActions) {
+  constructor(container: HTMLElement, actions?: ICartProductItemActions) {
     super(container);
 
     this.buttonDelete = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);

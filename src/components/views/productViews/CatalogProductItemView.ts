@@ -1,25 +1,24 @@
 import {ProductBaseView} from './ProductBaseView';
 import {IProductBase} from './ProductBaseView';
 import {ensureElement} from '../../../utils/utils'
-import { categoryMap } from '../../../utils/constants';
+import { categoryMap, CDN_URL } from '../../../utils/constants';
+import { TCategoryKey } from '../../../types';
 
-interface IProductPromoView extends IProductBase {
+export interface ICatalogProductItemView extends IProductBase {
   category: string;
-  image: HTMLImageElement;
+  image: string;
 }
 
-export interface IProductPromoActions {
+export interface ICatalogProductItemActions {
   onClickOpen: () => void;
 }
 
-type TCategoryKey = keyof typeof categoryMap;
-
-export class ProductPromoView extends ProductBaseView<IProductPromoView> {
+export class CatalogProductItemView extends ProductBaseView<ICatalogProductItemView> {
   protected categoryEl: HTMLElement;
   protected imageEl: HTMLImageElement;
   protected buttonEl = this.container;
 
-  constructor(container: HTMLElement, actions?: IProductPromoActions) {
+  constructor(container: HTMLElement, actions?: ICatalogProductItemActions) {
     super(container);
 
     this.categoryEl = ensureElement<HTMLElement>('.card__category', this.container);
@@ -35,6 +34,6 @@ export class ProductPromoView extends ProductBaseView<IProductPromoView> {
   }
 
   set image(value: string) {
-    this.setImage(this.imageEl, value, this.title);
+    this.setImage(this.imageEl, `${CDN_URL}${value}`, this.title);
   }
 }

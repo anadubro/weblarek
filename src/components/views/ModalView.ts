@@ -18,12 +18,13 @@ export class ModalView extends Component<IModalView> {
     this.contentEl = ensureElement<HTMLElement>('.modal__content', this.container);
 
     this.closeButtonEl.addEventListener('click', () => {
-      this.events.emit('modal:close');
+      this.close();
     });
 
-    document.addEventListener('click', (event) => {
-      if (!this.container.contains(event.target as Node)) {
-        this.events.emit('modal:close');
+    const extModalAreaEl = this.container;
+    extModalAreaEl.addEventListener('click', (event) => {
+      if (event.target == extModalAreaEl) {
+        this.close();
       } 
     });
   }

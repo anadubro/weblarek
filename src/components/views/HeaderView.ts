@@ -8,16 +8,16 @@ interface IHeaderView {
 }
 
 export class HeaderView extends Component<IHeaderView> {
-  protected basketButton: HTMLButtonElement;
+  protected cartButton: HTMLButtonElement;
   protected counterElement: HTMLElement;
 
   constructor(protected events: IEvents, container: HTMLElement) {
     super(container);
-    this.basketButton = ensureElement<HTMLButtonElement>('.header__basket', this.container);
+    this.cartButton = ensureElement<HTMLButtonElement>('.header__basket', this.container);
     this.counterElement = ensureElement<HTMLElement>('.header__basket-counter', this.container);
 
-    this.basketButton.addEventListener('click', () => {
-      this.events.emit('basket-modal:open');
+    this.cartButton.addEventListener('click', () => {
+      this.events.emit('cart:open');
     });
   }
 

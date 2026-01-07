@@ -1,9 +1,11 @@
 import { ensureElement } from '../../../utils/utils';
 import {Component} from '../../base/Component';
 
+type TPrice = number | null;
+
 export interface IProductBase {
   title: string;
-  price: number;
+  price: TPrice;
 }
 
 export class ProductBaseView<T extends IProductBase> extends Component<T> {
@@ -20,7 +22,7 @@ export class ProductBaseView<T extends IProductBase> extends Component<T> {
     this.titleEl.textContent = value;
   }
 
-  set price(value: number) {
+  set price(value: TPrice) {
     this.priceEl.textContent = value ? `${value} синапсов` : 'Бесценно';
   }
 }

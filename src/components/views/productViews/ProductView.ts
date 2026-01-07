@@ -1,27 +1,28 @@
-import { categoryMap } from "../../../utils/constants";
+import { TCategoryKey } from "../../../types";
+import { categoryMap, CDN_URL } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
 import { IProductBase, ProductBaseView } from "./ProductBaseView";
 
-type TCategoryKey = keyof typeof categoryMap;
 
-interface IProductPreviewView extends IProductBase {
-  category: HTMLElement;
-  image: HTMLImageElement;
-  description: HTMLElement;
-  inBasket: boolean;
+interface IProductView extends IProductBase {
+  category: TCategoryKey;
+  image: string;
+  description: string;
+  buttonText: string;
+  isDisabled: boolean;
 }
 
-interface IProductPreviewActions {
+interface IProductActions {
   onClick: () => void;
 }
 
-export class ProductPreviewView extends ProductBaseView<IProductPreviewView> {
+export class ProductView extends ProductBaseView<IProductView> {
   protected categoryEl: HTMLElement;
   protected imageEl: HTMLImageElement;
   protected descriptionEl: HTMLElement;
   protected buttonEl: HTMLButtonElement;
 
-  constructor(container: HTMLElement, actions?: IProductPreviewActions) {
+  constructor(container: HTMLElement, actions?: IProductActions) {
     super(container);
     
     this.categoryEl = ensureElement<HTMLElement>('.card__category', this.container);
@@ -30,7 +31,7 @@ export class ProductPreviewView extends ProductBaseView<IProductPreviewView> {
     this.buttonEl = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
     if(actions?.onClick) {
-      this.container.addEventListener('click', actions.onClick);
+      this.buttonEl.addEventListener('click', actions.onClick);
     }
   }
 
@@ -40,14 +41,18 @@ export class ProductPreviewView extends ProductBaseView<IProductPreviewView> {
   }
 
   set image(value: string) {
-    this.imageEl.src = value;
+    this.setImage(this.imageEl, `${CDN_URL}${value}`, this.title);
   }
 
   set description(value: string) {
     this.descriptionEl.textContent = value;
   }
 
-  set inBasket(value: boolean) {
-    this.buttonEl.textContent = value ? 'Удалить из корзины' : 'В корзину';
+  set buttonText(value: string) {
+    this.buttonEl.textContent = value;
+  }
+
+  set isDisabled(value: boolean) {
+    this.buttonEl.disabled = value; 
   }
 }
