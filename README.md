@@ -536,21 +536,22 @@ Presenter - презентер содержит основную логику п
 `set phone(value: string)` - устанавливает значение поля номера телефона.
 `set errors(value: IBuyerErrors)` - отображает ошибки валидации контактных данных.
 
-#### События actions (View → Presenter)
-`cart:open` - Открывает модальное окно с содержимым корзины. Генерируется при клике на кнопку корзины в шапке сайта. Источник: HeaderView.
-`cartView:submit` - Закрывает корзину и открывает форму оформления заказа (OrderFormView). Генерируется при нажатии кнопки подтверждения корзины. Источник: CartView.
-`orderOrContactsForm:changed` - Сохраняет данные в модель Buyer. Генерируется при изменении любого поля форм оформления заказа или контактов. Источники: BaseFormView, OrderFormView, ContactsFormView.
-`orderForm:submit` - Открывает вторую форму (ContactsFormView). Генерируется при отправке первой формы оформления заказа. Источник: OrderFormView.
-`contactsForm:submit` - Отправляет заказ на сервер и открывает сообщение об успешной покупке. Генерируется при отправке формы контактных данных. Источник: ContactsFormView.
-`productView:selected` - Устанавливает выбранный товар в модель Catalog. Генерируется при клике на карточку товара в каталоге. Источник: CatalogProductItemView. Функция-источник: onClickOpen.
-`cartView:addProduct` - Добавляет товар в модель Cart. Генерируется при нажатии кнопки «Купить» в карточке товара. Источник: ProductView. Функция-источник: onClick.
-`cartView:removeProduct` - Удаляет товар из модели Cart. Генерируется при удалении товара из корзины: из карточки товара, из списка корзины. Источник: ProductView, CartProductItemView. Функции-источники: onClick, onClickDelete.
+#### События
+##### События actions
+`cart:open` - Клик по кнопке корзины в шапке сайта. Источник: HeaderView.
+`cartView:submit` - Клик по кнопке подтверждения корзины. Источник: CartView.
+`orderOrContactsForm:changed` - Генерируется при изменении любого поля форм оформления заказа или контактов. Источники: BaseFormView, OrderFormView, ContactsFormView.
+`orderForm:submit` - Отправка первой формы оформления заказа. Источник: OrderFormView.
+`contactsForm:submit` - Отправка формы контактных данных. Источник: ContactsFormView.
+`productView:selected` - Клик по карточке товара в каталоге. Источник: CatalogProductItemView. Функция-источник: onClickOpen.
+`cartView:addProduct` - Клик по кнопке «Купить» в карточке товара. Источник: ProductView. Функция-источник: onClick.
+`cartView:removeProduct` - Удаление товара из корзины: из карточки товара, из списка корзины. Источник: ProductView, CartProductItemView. Функции-источники: onClick, onClickDelete.
 
-#### События слоя Model
-`catalogModel:changed` - Перерисовывает каталог товаров (CatalogView). Генерируется при изменении списка товаров каталога. Источник: модель Catalog.
-`productModel:selected` - Открывает модальное окно с детальной карточкой товара (ProductView). Генерируется при изменении выбранного товара. Источник: модель Catalog.
-`cartModel:changed` - Обрабатывается в Presenter (2 обработчика): перерисовка корзины (CartView), обновление счётчика товаров в HeaderView. Генерируется при любом изменении корзины: добавление товара, удаление товара, очистка корзины. Источник: модель Cart.
-`buyerModel:changed` - Обрабатывается в Presenter: выполняется валидация данных, перерисовываются OrderFormView и ContactsFormView. Источник: модель Buyer.
+##### События слоя Model
+`catalogModel:changed` - Изменение списка товаров каталога. Источник: модель Catalog.
+`productModel:selected` - Изменение выбранного товара. Источник: модель Catalog.
+`cartModel:changed` - Изменение корзины: добавление товара, удаление товара, очистка корзины. Источник: модель Cart.
+`buyerModel:changed` - Валидация данных. Источник: модель Buyer.
 
 #### Слой Presenter
 Слой Presenter реализован в файле main.ts и выполняет роль связующего звена между слоями Model и View.
@@ -619,16 +620,16 @@ Presenter - презентер содержит основную логику п
 2. Presenter закрывает модальное окно.
 
 ##### События Presenter
-`catalogModel:changed` — изменение списка товаров в модели каталога; Presenter формирует карточки товаров и обновляет CatalogView.
-`productView:selected` — клик по карточке товара в каталоге; Presenter устанавливает выбранный товар в модель Catalog.
-`productModel:selected` — изменение выбранного товара в модели каталога; Presenter открывает модальное окно с детальной карточкой товара (ProductView).
-`cartView:addProduct` — клик по кнопке «Купить» в карточке товара; Presenter добавляет товар в модель Cart.
-`cartView:removeProduct` — клик по кнопке удаления товара (в карточке товара или в корзине); Presenter удаляет товар из модели Cart.
-`cartModel:changed` — изменение состояния корзины; Presenter обновляет содержимое CartView и счётчик товаров в HeaderView.
-`cart:open` — клик по значку «Открыть корзину» в компоненте HeaderView; Presenter открывает корзину в модальном окне.
-`cartView:submit` — клик по кнопке оформления заказа в корзине; Presenter открывает форму оформления заказа (OrderFormView).
-`orderOrContactsForm:changed `— изменение любого поля формы заказа или контактов; Presenter сохраняет данные в модель Buyer.
-`buyerModel:changed` — изменение данных покупателя; Presenter выполняет валидацию и обновляет состояние форм заказа и контактов.
-`orderForm:submit` — отправка формы оформления заказа; Presenter открывает форму контактных данных (ContactsFormView).
-`contactsForm:submit` — отправка формы контактных данных; Presenter отправляет заказ на сервер и открывает экран успешного оформления заказа.
-`orderSuccessView:close` — клик по кнопке закрытия экрана успешного заказа; Presenter закрывает модальное окно.
+`catalogModel:changed` — изменение списка товаров в модели каталога. Presenter формирует карточки товаров и обновляет CatalogView.
+`productView:selected` — клик по карточке товара в каталоге. Presenter устанавливает выбранный товар в модель Catalog.
+`productModel:selected` — изменение выбранного товара в модели каталога. Presenter открывает модальное окно с детальной карточкой товара (ProductView).
+`cartView:addProduct` — клик по кнопке «Купить» в карточке товара. Presenter добавляет товар в модель Cart.
+`cartView:removeProduct` — клик по кнопке удаления товара (в карточке товара или в корзине). Presenter удаляет товар из модели Cart.
+`cartModel:changed` — изменение состояния корзины. Presenter обновляет содержимое CartView и счётчик товаров в HeaderView.
+`cart:open` — клик по значку «Открыть корзину» в компоненте HeaderView. Presenter открывает корзину в модальном окне.
+`cartView:submit` — клик по кнопке оформления заказа в корзине. Presenter открывает форму оформления заказа (OrderFormView).
+`orderOrContactsForm:changed `— изменение любого поля формы заказа или контактов. Presenter сохраняет данные в модель Buyer.
+`buyerModel:changed` — изменение данных покупателя. Presenter выполняет валидацию и обновляет состояние форм заказа и контактов.
+`orderForm:submit` — отправка формы оформления заказа. Presenter открывает форму контактных данных (ContactsFormView).
+`contactsForm:submit` — отправка формы контактных данных. Presenter отправляет заказ на сервер и открывает экран успешного оформления заказа.
+`orderSuccessView:close` — клик по кнопке закрытия экрана успешного заказа. Presenter закрывает модальное окно.

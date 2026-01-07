@@ -38,7 +38,7 @@ export class BaseFormView<T extends IBaseFormView> extends Component<T> {
                 }
                 timer = setTimeout(() => {
                     inputEl.dispatchEvent(new Event('change'));
-                }, 1500);
+                }, 1000);
             });
             
             // Устанавливаем обрабочик изменения на каждое текстовое поле
