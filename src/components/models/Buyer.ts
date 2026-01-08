@@ -56,19 +56,19 @@ export class Buyer {
   validate(): IBuyerErrors {
     const errors: IBuyerErrors = {};
 
-    if (!this.payment) {
+    if (!this.payment.trim()) {
       errors.payment = 'Не выбран способ оплаты';
     }
 
-    if (!this.address) {
+    if (!this.address.trim()) {
       errors.address = 'Укажите адрес';
     }
 
-    if (!this.email) {
+    if (!this.email.trim()) {
       errors.email = 'Укажите адрес электронной почты';
     }
 
-    if (!this.phone) {
+    if (!this.phone.trim()) {
       errors.phone = 'укажите номер телефона';
     }
     return errors;
