@@ -19,10 +19,6 @@ export class ContactsFormView extends BaseFormView<IContactsFormView> {
         this.emailEl = ensureElement<HTMLInputElement>('input[name="email"]', this.container);
         this.phoneEl = ensureElement<HTMLInputElement>('input[name="phone"]', this.container);
 
-        this.formEl.addEventListener('change', () => {
-            this.events.emit('orderOrContactsForm:changed');
-        });
-
         // обработчик отправки формы
         this.formEl.addEventListener('submit', (e) => {
             this.events.emit('contactsForm:submit');

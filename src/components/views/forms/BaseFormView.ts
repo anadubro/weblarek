@@ -30,20 +30,9 @@ export class BaseFormView<T extends IBaseFormView> extends Component<T> {
 
         const textInputElList = ensureAllElements<HTMLInputElement>('input[type="text"]', this.container);
         textInputElList.forEach((inputEl) => {
-            // инициируем событие изменения текстового поля по таймеру (если в течение секунды не было нажатий клавиш)
-            let timer: number = 0;
-            inputEl.addEventListener('input', () => {
-                if (timer) {
-                    clearTimeout(timer);
-                }
-                timer = setTimeout(() => {
-                    inputEl.dispatchEvent(new Event('change'));
-                }, 1000);
-            });
-            
             // Устанавливаем обрабочик изменения на каждое текстовое поле
-            inputEl.addEventListener('change', () => {
-                let formData: IBuyerFormData = {};
+            inputEl.addEventListener('input', () => {
+                const formData: IBuyerFormData = {};
                 formData[inputEl.name as keyof IBuyerFormData] = inputEl.value;
                 this.events.emit('orderOrContactsForm:changed', formData as IBuyerFormData);
             });

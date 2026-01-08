@@ -55,6 +55,10 @@ const cartView = new CartView(eventEmitter, cartContainer);
 const catalogContainer = ensureElement('.gallery');
 const catalogView = new CatalogView(eventEmitter, catalogContainer);
 
+// Выбранный товар
+const selectedProductContainer = cloneTemplate<HTMLElement>('#card-preview');
+const selectedProductView =  new ProductView(selectedProductContainer);
+
 // Форма1 оформления заказа
 const orderFormContainer = cloneTemplate<HTMLButtonElement>('#order');
 const orderFormView = new OrderFormView(eventEmitter, orderFormContainer);
@@ -98,7 +102,6 @@ eventEmitter.on('productView:selected', (product: IProduct) => {
   catalogModel.setSelectedProduct(product);
 });
 
-
 // обработчик события 'productModel:selected': открывает модальное окно с выбранным товаром
 eventEmitter.on('productModel:selected', () => {
   const product = catalogModel.getSelectedProduct();
@@ -108,6 +111,7 @@ eventEmitter.on('productModel:selected', () => {
 
   let hasProductById = cartModel.hasProductById(product.id);
   let onClickEventName = hasProductById ? 'cartView:removeProduct' : 'cartView:addProduct';
+
   let actions = {
     onClick: () => {
       eventEmitter.emit(onClickEventName, product);
@@ -115,8 +119,9 @@ eventEmitter.on('productModel:selected', () => {
     }
   }
 
-  const container = cloneTemplate<HTMLElement>('#card-preview');
-  const productView =  new ProductView(container, actions);
+  // Устанавилаем в представлении обработчик клика по кнопке для выбранного товара 
+  // (инициирует событие добавления/удаления товара в корзину с передачей выбранного товара)
+  selectedProductView.setActions(actions);
 
   let isDisabled, buttonText;
   if (product.price === null) {
@@ -127,7 +132,7 @@ eventEmitter.on('productModel:selected', () => {
     buttonText = hasProductById ? 'Удалить из корзины' : 'Купить';
   }
 
-  const productContainer = productView.render({
+  const selectedProductContainer = selectedProductView.render({
       title: product.title,
       price: product.price,
       category: product.category,
@@ -136,10 +141,9 @@ eventEmitter.on('productModel:selected', () => {
       isDisabled: isDisabled
   },);
   // передаем разметку товара в рендер модального окна
-  modalView.render({content: productContainer});
+  modalView.render({content: selectedProductContainer});
   modalView.open();
 });
-
 
 // обработчик события 'cartView:addProduct': добавляет товар в модель корзины
 eventEmitter.on('cartView:addProduct', (product: IProduct) => {
@@ -153,7 +157,7 @@ eventEmitter.on('cartView:removeProduct', (product: IProduct) => {
 });
 
 
-function render_cart() {
+function renderCart() {
   const cartProductItemContainerList = cartModel.getProducts().map((product, index) => {
     const container = cloneTemplate<HTMLButtonElement>('#card-basket');
     const actions = {
@@ -177,12 +181,7 @@ function render_cart() {
 
 // обработчик события 'cartModel:changed': обновляет разметку корзины после изменения модели корзины
 eventEmitter.on('cartModel:changed', () => {
-  render_cart();
-});
-
-
-// обработчик события 'cartModel:changed': обновляет разметку хэдера (кол-во товаров в корзине) после изменения модели корзины
-eventEmitter.on('cartModel:changed', () => {
+  renderCart();
   const cartCounter = cartModel.getCount()
   headerView.render({
     counter: cartCounter
@@ -192,17 +191,13 @@ eventEmitter.on('cartModel:changed', () => {
 
 // обработчик события 'cart:open': открывает корзину в модальном окне
 eventEmitter.on('cart:open', () => {
-  modalView.render({content: render_cart()});
+  modalView.render({ content: cartView.render() });
   modalView.open();
 });
 
-
 // обработчик события 'cartView:submit': подтвердить корзину и открыть первую форму оформления заказа в модальном окне
 eventEmitter.on('cartView:submit', () => {
-
-
   modalView.render({content: orderFormView.render()});
-  modalView.open();
 });
 
 
@@ -248,9 +243,7 @@ eventEmitter.on('orderForm:submit', () => {
   if (errors.payment || errors.address) {
     return;
   }
-  modalView.close();
   modalView.render({content: contactsFormView.render()});
-  modalView.open();
 });
 
 // обработчик события 'contactsForm:submit': отправить на сервер заказ и открыть сообщение о покупке в модальном окне
@@ -267,12 +260,10 @@ eventEmitter.on('contactsForm:submit', async () => {
   };
 
   try {
-    let result = await communicationApi.postOrderInfo(order);
-    modalView.close();
+    const result = await communicationApi.postOrderInfo(order);
     modalView.render({content: orderSuccessView.render({
       orderPrice: result.total
     })});
-    modalView.open();
 
     // очищаем модели покупателя и корзины
     buyerModel.clear();
@@ -292,4 +283,10 @@ eventEmitter.on('orderSuccessView:close', () => {
 //
 // Init
 //
-catalogModel.setProducts(await communicationApi.getProductList());
+// catalogModel.setProducts(await communicationApi.getProductList());
+try {
+  const products = await communicationApi.getProductList();
+  catalogModel.setProducts(products);
+} catch (error) {
+  console.error('Ошибка при загрузке каталога:', error);
+}

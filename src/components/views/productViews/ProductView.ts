@@ -30,8 +30,14 @@ export class ProductView extends ProductBaseView<IProductView> {
     this.descriptionEl = ensureElement<HTMLElement>('.card__text', this.container);
     this.buttonEl = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-    if(actions?.onClick) {
-      this.buttonEl.addEventListener('click', actions.onClick);
+    if(actions) {
+      this.setActions(actions);
+    }
+  }
+
+  setActions(actions: IProductActions) {
+    if (actions.onClick) {
+      this.buttonEl.onclick = actions.onClick;
     }
   }
 

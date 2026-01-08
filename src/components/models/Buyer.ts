@@ -22,17 +22,17 @@ export class Buyer {
   }
 
   setAddress(address: string): void {
-    this.address = address.trim();
+    this.address = address;
     this.events.emit('buyerModel:changed');
   }
 
   setEmail(email: string): void {
-    this.email = email.trim();
+    this.email = email;
     this.events.emit('buyerModel:changed');
   }
 
   setPhone(phone: string): void {
-    this.phone = phone.trim();
+    this.phone = phone;
     this.events.emit('buyerModel:changed');
   }
 
