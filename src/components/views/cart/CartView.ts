@@ -21,6 +21,7 @@ export class CartView extends Component<ICartView> {
     this.cartListEl = ensureElement<HTMLElement>('.basket__list', this.container);
     this.cartSubmitEl = ensureElement<HTMLButtonElement>('.basket__button', this.container);
     this.cartPriceEl = ensureElement<HTMLElement>('.basket__price', this.container);
+    this.productList = [];
 
     this.cartSubmitEl.addEventListener('click', () => {
       this.events.emit('cartView:submit');

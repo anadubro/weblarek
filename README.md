@@ -544,7 +544,7 @@ Presenter - презентер содержит основную логику п
 `orderForm:submit` - Отправка первой формы оформления заказа. Источник: OrderFormView.
 `contactsForm:submit` - Отправка формы контактных данных. Источник: ContactsFormView.
 `productView:selected` - Клик по карточке товара в каталоге. Источник: CatalogProductItemView. Функция-источник: onClickOpen.
-`cartView:addProduct` - Клик по кнопке «Купить» в карточке товара. Источник: ProductView. Функция-источник: onClick.
+`productView:toggle` - добавляет или удаляет товар в модель корзины по клику на кнопке 'купить/удалить' выбранного товара. Источник: ProductView. Функция-источник: onClick.
 `cartView:removeProduct` - Удаление товара из корзины: из карточки товара, из списка корзины. Источник: ProductView, CartProductItemView. Функции-источники: onClick, onClickDelete.
 
 ##### События слоя Model
@@ -576,7 +576,7 @@ Presenter - презентер содержит основную логику п
 
 ##### Работа с корзиной
 Добавление товара:
-1. ProductView генерирует событие cartView:addProduct;
+1. ProductView генерирует событие productView:toggle;
 2. Presenter добавляет товар в модель Cart.
 
 Удаление товара:
@@ -623,7 +623,7 @@ Presenter - презентер содержит основную логику п
 `catalogModel:changed` — изменение списка товаров в модели каталога. Presenter формирует карточки товаров и обновляет CatalogView.
 `productView:selected` — клик по карточке товара в каталоге. Presenter устанавливает выбранный товар в модель Catalog.
 `productModel:selected` — изменение выбранного товара в модели каталога. Presenter открывает модальное окно с детальной карточкой товара (ProductView).
-`cartView:addProduct` — клик по кнопке «Купить» в карточке товара. Presenter добавляет товар в модель Cart.
+`productView:toggle` — добавляет или удаляет товар в модель корзины по клику на кнопке 'купить/удалить' выбранного товара.
 `cartView:removeProduct` — клик по кнопке удаления товара (в карточке товара или в корзине). Presenter удаляет товар из модели Cart.
 `cartModel:changed` — изменение состояния корзины. Presenter обновляет содержимое CartView и счётчик товаров в HeaderView.
 `cart:open` — клик по значку «Открыть корзину» в компоненте HeaderView. Presenter открывает корзину в модальном окне.

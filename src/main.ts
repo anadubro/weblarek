@@ -57,7 +57,7 @@ const catalogView = new CatalogView(eventEmitter, catalogContainer);
 
 // Выбранный товар
 const selectedProductContainer = cloneTemplate<HTMLElement>('#card-preview');
-const selectedProductView =  new ProductView(selectedProductContainer);
+const selectedProductView =  new ProductView(eventEmitter, selectedProductContainer);
 
 // Форма1 оформления заказа
 const orderFormContainer = cloneTemplate<HTMLButtonElement>('#order');
@@ -109,19 +109,7 @@ eventEmitter.on('productModel:selected', () => {
     return;
   }
 
-  let hasProductById = cartModel.hasProductById(product.id);
-  let onClickEventName = hasProductById ? 'cartView:removeProduct' : 'cartView:addProduct';
-
-  let actions = {
-    onClick: () => {
-      eventEmitter.emit(onClickEventName, product);
-      modalView.close();  // после обработки нажатия кнопки покупки/удаления товара закрываем модалку
-    }
-  }
-
-  // Устанавилаем в представлении обработчик клика по кнопке для выбранного товара 
-  // (инициирует событие добавления/удаления товара в корзину с передачей выбранного товара)
-  selectedProductView.setActions(actions);
+  const hasProductById = cartModel.hasProductById(product.id);
 
   let isDisabled, buttonText;
   if (product.price === null) {
@@ -145,17 +133,24 @@ eventEmitter.on('productModel:selected', () => {
   modalView.open();
 });
 
-// обработчик события 'cartView:addProduct': добавляет товар в модель корзины
-eventEmitter.on('cartView:addProduct', (product: IProduct) => {
-  cartModel.addProduct(product);
-});
-
-
 // обработчик события 'cartView:removeProduct': удаляет товар из модели корзины
 eventEmitter.on('cartView:removeProduct', (product: IProduct) => {
   cartModel.removeProduct(product);
 });
 
+// обработчик события 'productView:toggle': добавляет или удаляет товар в модель корзины по клику на кнопке 'купить/удалить' выбранного товара
+eventEmitter.on('productView:toggle', () => {
+  const selectedProduct = catalogModel.getSelectedProduct();
+  if (!selectedProduct) {
+    return;
+  }
+  if(cartModel.hasProductById(selectedProduct.id)) {
+        cartModel.removeProduct(selectedProduct);
+    } else {
+        cartModel.addProduct(selectedProduct);
+    }
+  modalView.close();
+});
 
 function renderCart() {
   const cartProductItemContainerList = cartModel.getProducts().map((product, index) => {
@@ -283,10 +278,10 @@ eventEmitter.on('orderSuccessView:close', () => {
 //
 // Init
 //
-// catalogModel.setProducts(await communicationApi.getProductList());
 try {
   const products = await communicationApi.getProductList();
   catalogModel.setProducts(products);
 } catch (error) {
   console.error('Ошибка при загрузке каталога:', error);
 }
+renderCart();

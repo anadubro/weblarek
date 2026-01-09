@@ -1,6 +1,7 @@
 import { TCategoryKey } from "../../../types";
 import { categoryMap, CDN_URL } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
+import { IEvents } from "../../base/Events";
 import { IProductBase, ProductBaseView } from "./ProductBaseView";
 
 
@@ -12,17 +13,13 @@ interface IProductView extends IProductBase {
   isDisabled: boolean;
 }
 
-interface IProductActions {
-  onClick: () => void;
-}
-
 export class ProductView extends ProductBaseView<IProductView> {
   protected categoryEl: HTMLElement;
   protected imageEl: HTMLImageElement;
   protected descriptionEl: HTMLElement;
   protected buttonEl: HTMLButtonElement;
 
-  constructor(container: HTMLElement, actions?: IProductActions) {
+  constructor(protected events: IEvents, container: HTMLElement) {
     super(container);
     
     this.categoryEl = ensureElement<HTMLElement>('.card__category', this.container);
@@ -30,15 +27,7 @@ export class ProductView extends ProductBaseView<IProductView> {
     this.descriptionEl = ensureElement<HTMLElement>('.card__text', this.container);
     this.buttonEl = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-    if(actions) {
-      this.setActions(actions);
-    }
-  }
-
-  setActions(actions: IProductActions) {
-    if (actions.onClick) {
-      this.buttonEl.onclick = actions.onClick;
-    }
+    this.buttonEl.addEventListener('click', () => this.events.emit('productView:toggle'));
   }
 
   set category(value: string) {
