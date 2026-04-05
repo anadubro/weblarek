@@ -1,6 +1,7 @@
 import { IProduct } from '../../types/index';
 import { IEvents } from '../base/Events';
 
+// ...
 export class Cart {
   protected productList:IProduct[] = [];
 
